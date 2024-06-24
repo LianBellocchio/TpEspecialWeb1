@@ -1,23 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpotifyWeb</title>
+    <title>Spotify Web</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
     <header>
         <img src="assets/proyectoespecial1.png" alt="Logo Spotify">
         <nav>
             <ul class="menu" id="menu">
-                <li>
-                    <a href="about.html">
-                        Acerca de
-                    </a>
-                </li>
+                <li><a href="about.html">Acerca de</a></li>
                 <li><a href="contact.html">Contacto</a></li>
             </ul>
             <div class="menu-toggle">&#9776;</div>
@@ -28,53 +22,60 @@
     </header>
     <main>
         <section class="contenido">
-            <h1>Bienvenido a SpotifyWeb</h1>
+            <h1>Bienvenido a Spotify Web</h1>
             <p>Explora y descubre nueva música.</p>
         </section>
         <section class="lista">
             <h2>Listado de canciones</h2>
-            <table id="tabla">
-                <thead>
-                    <tr>
-                        <th>Artista</th>
-                        <th>Álbum</th>
-                        <th>Año</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-body">
-                    <!-- datos se cargan aquí -->
-                </tbody>
-            </table>
-            <form id="add-form">
-                <input type="text" id="artista-input" placeholder="Artista">
-                <input type="text" id="album-input" placeholder="Álbum">
-                <input type="number" id="year-input" placeholder="Año">
+            <div class="filter-container">
+                <input id="filter-input" type="text" placeholder="Filtrar por artista">
+                <select id="filter-select">
+                    <option value="">Seleccione un año</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table id="tabla">
+                    <thead>
+                        <tr>
+                            <th>Artista</th>
+                            <th>Álbum</th>
+                            <th>Año</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body">
+                        <!-- datos se cargan aquí -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <button id="prev-page" class="pagination-button">Anterior</button>
+                <span id="current-page">1</span>
+                <button id="next-page" class="pagination-button">Siguiente</button>
+            </div>
+            <form id="add-form" class="formulario">
+                <input type="text" id="artista-input" placeholder="Artista" required>
+                <input type="text" id="album-input" placeholder="Álbum" required>
+                <input type="number" id="year-input" placeholder="Año" required>
                 <button id="add-button">Agregar canción</button>
             </form>
             <button id="create-multiple-button">Crear varios ítems</button>
-            <input id="filter-input" type="text" placeholder="Filtrar por artista">
-            <select id="filter-select">
-                <option value="">Seleccione un año</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-            </select>
         </section>
         <section class="imagen">
             <h2>Imagen destacada</h2>
             <img src="assets/ss.png" alt="Imagen destacada">
         </section>
-        <div id="content-container">
-        </div>
+        <div id="content-container"></div>
     </main>
     <footer>
-        <p>&copy; 2024 SpotifyWeb</p>
+        <p>&copy; 2024 Spotify Web</p>
     </footer>
     <script src="js/ajax.js"></script>
     <script src="js/main.js"></script>
 </body>
-
 </html>

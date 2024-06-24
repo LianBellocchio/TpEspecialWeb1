@@ -33,16 +33,16 @@ header img {
 nav ul.menu {
     list-style: none;
     display: flex;
-    flex-direction: column; 
-    display: none; 
+    flex-direction: column;
+    display: none;
 }
 
 nav ul.menu.show {
-    display: flex; 
+    display: flex;
 }
 
 nav ul.menu li {
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
 
 nav ul.menu li a {
@@ -149,9 +149,17 @@ body.dark-mode footer {
 }
 
 /* agregar estilos para la tabla y los botones */
+.table-container {
+    overflow-x: auto;
+}
+body.dark-mode table thead tr{
+    color: #121212;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
+    margin-bottom: 20px;
 }
 
 th, td {
@@ -168,9 +176,10 @@ th {
     background-color: #4CAF50;
     color: #fff;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 5px 10px;
+    font-size: 14px;
     cursor: pointer;
+    border-radius: 3px;
 }
 
 .edit-button:hover, .delete-button:hover {
@@ -185,57 +194,79 @@ th {
     background-color: #cc0000;
 }
 
-/* Media queries */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
 
-/* 480px en adelante */
+.pagination-button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pagination-button:hover {
+    background-color: #3e8e41;
+}
+
+.pagination-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Media queries */
 @media (min-width: 480px) {
     nav ul.menu {
-        flex-direction: row; 
-        display: flex; 
+        flex-direction: row;
+        display: flex;
     }
 
     nav ul.menu li {
         margin-right: 20px;
-        margin-bottom: 0; 
+        margin-bottom: 0;
     }
 
     .menu-toggle {
-        display: none; 
+        display: none;
     }
 
     header {
-        position: static; 
+        position: static;
     }
 }
 
-/* 768px en adelante */
 @media (min-width: 768px) {
     header {
-        flex-direction: row; 
+        flex-direction: row;
         align-items: center;
         justify-content: space-between;
     }
 
     main {
-        padding: 40px; 
+        padding: 40px;
     }
 }
 
-/* 950px en adelante */
 @media (min-width: 950px) {
     .contenido {
-        margin-bottom: 60px; 
+        margin-bottom: 60px;
     }
 
     .formulario {
-        padding: 40px; /
+        padding: 40px;
     }
 
     .input-group input {
-        padding: 10px; 
+        padding: 10px;
     }
 
     footer {
-        padding: 40px; 
+        padding: 40px;
     }
 }

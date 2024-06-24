@@ -1,48 +1,3 @@
-
-// Mostrar u ocultar menú en versión móvil
-var menuToggle = document.querySelector('.menu-toggle');
-var menu = document.querySelector('nav ul.menu');
-menuToggle.addEventListener('click', function () {
-    menu.classList.toggle('show');
-});
-
-
-// Funcionalidad de cambio de modo claro/oscuro
-var themeToggle = document.getElementById('theme-toggle');
-var themeIcon = document.getElementById('theme-icon');
-var isDarkMode = false;
-themeToggle.addEventListener('click', function () {
-    isDarkMode = !isDarkMode;
-    document.body.classList.toggle('dark-mode', isDarkMode);
-    themeIcon.src = isDarkMode ? 'assets/moon.png' : 'assets/sun.png';
-    themeIcon.alt = isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
-});
-
-var apikey = "https://66732baf6ca902ae11b3591b.mockapi.io/api/v1/";
-
-// Función para cargar datos de la tabla
-function loadTableData(e) {
-    e.preventDefault();
-    fetch(`${apikey}spotify/data`)
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.getElementById('tabla-body');
-            tableBody.innerHTML = '';
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.artista}</td>
-                    <td>${item.album}</td>
-                    <td>${item.year}</td>
-                    <td>
-                        <button class="edit-button" data-id="${item.id}">Editar</button>
-                        <button class="delete-button" data-id="${item.id}">Borrar</button>
-                    </td>`;
-                tableBody.appendChild(row);
-            });
-        });
-}
-
 // Mostrar u ocultar menú en versión móvil
 var menuToggle = document.querySelector('.menu-toggle');
 var menu = document.querySelector('nav ul.menu');
@@ -62,30 +17,48 @@ themeToggle.addEventListener('click', function() {
 });
 
 var apikey = "https://66732baf6ca902ae11b3591b.mockapi.io/api/v1/";
+var currentPage = 1;
+var itemsPerPage = 5;
 
-// Función para cargar datos de la tabla
-function loadTableData() {
+// Función para cargar datos de la tabla con paginación
+function loadTableData(page) {
     fetch(`${apikey}spotify/data`)
         .then(response => response.json())
         .then(data => {
-            const tableBody = document.getElementById('tabla-body');
-            tableBody.innerHTML = '';
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.artista}</td>
-                    <td>${item.album}</td>
-                    <td>${item.year}</td>
-                    <td>
-                        <button class="edit-button" data-id="${item.id}">Editar</button>
-                        <button class="delete-button" data-id="${item.id}">Borrar</button>
-                    </td>`;
-                tableBody.appendChild(row);
-            });
+            renderTableData(data, page);
         });
 }
 
-// Agregar evento a la tabla para capturar clics en los botones dinámicos
+function renderTableData(data, page) {
+    const tableBody = document.getElementById('tabla-body');
+    tableBody.innerHTML = '';
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const paginatedItems = data.slice(start, end);
+
+    paginatedItems.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.artista}</td>
+            <td>${item.album}</td>
+            <td>${item.year}</td>
+            <td>
+                <button class="edit-button" data-id="${item.id}">Editar</button>
+                <button class="delete-button" data-id="${item.id}">Borrar</button>
+            </td>`;
+        tableBody.appendChild(row);
+    });
+
+    updatePaginationButtons(data.length, page);
+}
+
+function updatePaginationButtons(totalItems, page) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    document.getElementById('current-page').textContent = page;
+    document.getElementById('prev-page').disabled = page === 1;
+    document.getElementById('next-page').disabled = page === totalPages;
+}
+
 document.getElementById('tabla').addEventListener('click', function(event) {
     if (event.target.classList.contains('edit-button')) {
         const id = event.target.dataset.id;
@@ -96,42 +69,57 @@ document.getElementById('tabla').addEventListener('click', function(event) {
     }
 });
 
-// Función para agregar datos a la tabla
 function addDataToTable(e) {
     e.preventDefault();
-    const formData = new FormData(document.getElementById('add-form'));
+    const artista = document.getElementById('artista-input').value;
+    const album = document.getElementById('album-input').value;
+    const year = document.getElementById('year-input').value;
+    
+    const formData = new FormData();
+    formData.append('artista', artista);
+    formData.append('album', album);
+    formData.append('year', year);
+    
     fetch(`${apikey}spotify/data`, {
         method: 'POST',
         body: formData
     }).then(response => response.json())
     .then(data => {
-        loadTableData();
+        loadTableData(currentPage);
+        document.getElementById('add-form').reset();
     });
 }
 
-// Función para eliminar datos de la tabla
 function deleteDataFromTable(id) {
     fetch(`${apikey}spotify/data/${id}`, {
         method: 'DELETE'
     }).then(response => response.json())
     .then(() => {
-        loadTableData();
+        loadTableData(currentPage);
     });
 }
 
-// Función para editar datos de la tabla
 function editDataInTable(id) {
-    const formData = new FormData(document.getElementById(`edit-form-${id}`));
-    fetch(`${apikey}spotify/data/${id}`, {
-        method: 'PATCH',
-        body: formData
-    }).then(response => response.json())
-    .then(() => {
-        loadTableData();
-    });
+    const artista = prompt("Ingrese nuevo nombre del artista:");
+    const album = prompt("Ingrese nuevo nombre del álbum:");
+    const year = prompt("Ingrese nuevo año:");
+
+    if (artista && album && year) {
+        const formData = new FormData();
+        formData.append('artista', artista);
+        formData.append('album', album);
+        formData.append('year', year);
+
+        fetch(`${apikey}spotify/data/${id}`, {
+            method: 'PUT',
+            body: formData
+        }).then(response => response.json())
+        .then(() => {
+            loadTableData(currentPage);
+        });
+    }
 }
 
-// Función para crear varios ítems automáticamente
 function createMultipleItems(e) {
     e.preventDefault();
     const numItems = 3;
@@ -145,29 +133,39 @@ function createMultipleItems(e) {
             body: formData
         }).then(response => response.json())
         .then(data => {
-            loadTableData();
+            loadTableData(currentPage);
         });
     }
 }
 
-// Función para filtrar datos en la tabla
-function filterTableData(e) {
-    e.preventDefault();
-    const filterInput = document.getElementById('filter-input').value;
+function filterTableData() {
+    const filterInput = document.getElementById('filter-input').value.toLowerCase();
     const filterSelect = document.getElementById('filter-select').value;
-    const tableRows = document.getElementById('tabla-body').rows;
-    for (let i = 0; i < tableRows.length; i++) {
-        const row = tableRows[i];
-        const artista = row.cells[0].textContent;
-        const year = row.cells[2].textContent;
-        if ((filterInput && artista.toLowerCase().indexOf(filterInput.toLowerCase()) === -1) || 
-            (filterSelect && year !== filterSelect)) {
-            row.style.display = 'none';
-        } else {
-            row.style.display = '';
-        }
-    }
+    fetch(`${apikey}spotify/data`)
+        .then(response => response.json())
+        .then(data => {
+            const filteredData = data.filter(item => {
+                return (
+                    (!filterInput || item.artista.toLowerCase().includes(filterInput)) &&
+                    (!filterSelect || item.year === filterSelect)
+                );
+            });
+            renderTableData(filteredData, currentPage);
+        });
 }
+
+// Paginación
+document.getElementById('prev-page').addEventListener('click', function() {
+    if (currentPage > 1) {
+        currentPage--;
+        loadTableData(currentPage);
+    }
+});
+
+document.getElementById('next-page').addEventListener('click', function() {
+    currentPage++;
+    loadTableData(currentPage);
+});
 
 // Eventos
 document.getElementById('add-button').addEventListener('click', addDataToTable);
@@ -175,5 +173,5 @@ document.getElementById('create-multiple-button').addEventListener('click', crea
 document.getElementById('filter-input').addEventListener('input', filterTableData);
 document.getElementById('filter-select').addEventListener('change', filterTableData);
 document.addEventListener('DOMContentLoaded', () => {
-    loadTableData();
+    loadTableData(currentPage);
 });
