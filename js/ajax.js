@@ -5,14 +5,22 @@ function loadContent(url) {
         .then(html => {
             const contentContainer = document.getElementById('content-container');
             contentContainer.innerHTML = html;
-            // scrolledIntoView para ir al contenido generado
             setTimeout(() => {
                 contentContainer.scrollIntoView({ behavior: 'smooth' });
             }, 100);
+            // Actualizar la URL
+            history.pushState({ path: url }, '', url);
         });
 }
 
-// eventos
+// Controlar cambios en el historial
+window.addEventListener('popstate', (event) => {
+    if (event.state) {
+        loadContent(event.state.path);
+    }
+});
+
+// Eventos
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('nav a');
     navLinks.forEach(link => {

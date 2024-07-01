@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Web</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <header>
         <img src="assets/proyectoespecial1.png" alt="Logo Spotify">
@@ -62,9 +64,12 @@
                 <input type="text" id="artista-input" placeholder="Artista" required>
                 <input type="text" id="album-input" placeholder="Álbum" required>
                 <input type="number" id="year-input" placeholder="Año" required>
-                <button id="add-button">Agregar canción</button>
+                <button id="add-button" class="btn btn-primary">Agregar canción</button>
+                <button id="save-button" class="btn btn-primary" style="display: none;" type="button">Guardar cambios</button>
+                <div id="error-message" class="error-message" style="display: none;"></div>
             </form>
-            <button id="create-multiple-button">Crear varios ítems</button>
+            <input type="number" id="num-items-input" placeholder="Cantidad de Artistas">
+            <button id="create-multiple-button" class="btn btn-primary">Crear varios ítems</button>
         </section>
         <section class="imagen">
             <h2>Imagen destacada</h2>
@@ -78,4 +83,5 @@
     <script src="js/ajax.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>
